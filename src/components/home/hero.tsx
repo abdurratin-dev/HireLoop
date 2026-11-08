@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Briefcase, MapPin, Search } from "lucide-react";
 import globe from "@/assets/images/globe.png";
+import { Button } from "../ui/button";
 
 const trending = ["Product Designer", "AI Engineering", "Dev-ops Engineer"];
 
@@ -66,7 +67,7 @@ export function Hero() {
       {/* Planet */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-[110px] z-0 w-[1000px] -translate-x-1/2 sm:top-[-108px] sm:w-[1500px]"
+        className="pointer-events-none absolute left-1/2 top-[110px] z-0 w-[1000px] -translate-x-1/2 sm:top-[-125px] sm:w-[1440px]"
       >
         <Image
           src={globe}
@@ -85,14 +86,16 @@ export function Hero() {
       </div>
 
       {/* Copy */}
-      <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-6 pt-16 text-center sm:pt-50">
+      <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-6 pt-16 text-center sm:pt-40">
         {/* Badge */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center">
           <span
             aria-hidden
-            className="hidden h-px w-24 bg-gradient-to-r from-transparent to-white/20 sm:block"
+            className="hidden h-px w-24 bg-gradient-to-r from-transparent to-white/40 sm:block"
           />
-          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 backdrop-blur">
+          <div
+            className="flex items-center gap-2 rounded-full border border-transparent [background:linear-gradient(black,black)_padding-box,linear-gradient(180deg,#FFFFFF66,transparent)_border-box] px-4 py-2 backdrop-blur"
+          >
             <Briefcase className="size-3.5 shrink-0 text-orange-400" />
             <p className="font-mono text-[11px] tracking-[0.16em]">
               <span className="font-bold text-white">50,000+</span>{" "}
@@ -101,7 +104,7 @@ export function Hero() {
           </div>
           <span
             aria-hidden
-            className="hidden h-px w-24 bg-gradient-to-l from-transparent to-white/20 sm:block"
+            className="hidden h-px w-24 bg-gradient-to-l from-transparent to-white/40 sm:block"
           />
         </div>
 
@@ -111,14 +114,14 @@ export function Hero() {
         </h1>
 
         <p className="mt-8 max-w-xl text-[15px] leading-relaxed text-zinc-400">
-          HireLoop connects top talent with world-class companies. Browse thousands
-          of curated opportunities and land your next role — faster.
+          HireLoop connects top talent with world-class companies. Browse
+          thousands of curated opportunities and land your next role — faster.
         </p>
 
         {/* Search */}
         <form
           onSubmit={search}
-          className="mt-14 flex w-full max-w-[760px] flex-col gap-2 rounded-2xl border border-white/10 bg-[#121216]/90 p-2 shadow-2xl shadow-black/50 backdrop-blur sm:flex-row sm:items-center sm:gap-0"
+          className="mt-12 flex w-full max-w-[760px] flex-col gap-2 rounded-2xl border border-white/10 bg-[#121216]/90 p-2 shadow-2xl shadow-black/50 backdrop-blur sm:flex-row sm:items-center sm:gap-0"
         >
           <label className="flex min-w-0 flex-1 items-center gap-2.5 px-3 py-2">
             <Search className="size-4 shrink-0 text-zinc-500" />
@@ -145,17 +148,17 @@ export function Hero() {
             />
           </label>
 
-          <button
+          <Button
             type="submit"
             aria-label="Search jobs"
-            className="grid size-10 shrink-0 place-items-center rounded-lg bg-indigo-500 text-white shadow-sm shadow-indigo-500/30 transition-colors hover:bg-indigo-400 sm:ml-1"
+            className="grid h-10 w-full shrink-0 place-items-center rounded-lg bg-indigo-500 text-white shadow-sm shadow-indigo-500/30 transition-colors hover:bg-indigo-400 sm:ml-1 sm:size-10 sm:w-auto"
           >
             <Search className="size-4" />
-          </button>
+          </Button>
         </form>
 
         {/* Trending */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
+        <div className="mt-9 flex flex-wrap items-center justify-center gap-2">
           <span className="mr-1 text-xs text-zinc-500">Trending Position</span>
           {trending.map((position) => (
             <button
@@ -171,27 +174,10 @@ export function Hero() {
       </div>
 
       {/* Headline over the planet */}
-      <div className="relative z-10 mx-auto mt-96 max-w-2xl px-6 text-center">
-        <p className="text-2xl font-medium leading-snug text-balance sm:text-[36px]">
+      <div className="relative z-10 mx-auto mt-56 max-w-2xl px-6 text-center sm:mt-91">
+        <p className="text-2xl font-medium leading-snug text-balance sm:text-[34px]">
           Assisting over 15,000 job seekers find their dream positions.
         </p>
-      </div>
-
-      {/* Peeking cards — negative margin clips them against the section edge */}
-      <div className="relative z-10 mx-auto -mb-[110px] mt-12 flex w-full max-w-5xl gap-6 px-6">
-        {[0, 1, 2].map((i) => (
-          <div
-            key={i}
-            className="h-[170px] flex-1 rounded-t-2xl border border-b-0 border-white/10 bg-[#151519] px-5 pt-5 shadow-[0_-16px_50px_rgba(0,0,0,0.55)]"
-          >
-            <div className="flex items-center gap-3">
-              <span className="size-9 shrink-0 rounded-lg bg-indigo-500/20 ring-1 ring-indigo-400/30" />
-              <span className="h-3 w-28 rounded-full bg-white/15" />
-            </div>
-            <span className="mt-4 block h-2.5 w-full rounded-full bg-white/[0.07]" />
-            <span className="mt-2 block h-2.5 w-4/5 rounded-full bg-white/[0.07]" />
-          </div>
-        ))}
       </div>
     </section>
   );

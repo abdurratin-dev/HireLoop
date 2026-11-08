@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Logo from "@/assets/images/logo.png"
@@ -15,45 +16,48 @@ const links = [
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  // Auth pages are full-screen and render without the site navbar.
+  if (pathname === "/sign-up" || pathname === "/sign-in") return null;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-4 pt-3 sm:px-6">
-      <nav className="flex h-16 items-center justify-between rounded-2xl border border-border bg-card/80 px-5 shadow-lg shadow-black/20 backdrop-blur-xl sm:px-7">
+    <header className="sticky top-0 z-50 px-4 pt-4 sm:px-6 lg:px-11">
+      <nav className="flex h-20 items-center justify-between rounded-[22px] border border-border bg-card/80 px-5 shadow-lg shadow-black/20 backdrop-blur-xl sm:h-[90px] sm:px-6 lg:px-11">
       <Link href='/'>
         <Image
           src={Logo}
           alt="hireLoop Logo"
           width={154}
           height={44}
-          style={{ width: 120, height: "auto" }}
           priority
         />
       </Link>
 
         {/* Desktop navigation */}
-        <div className="hidden items-center gap-7 md:flex">
+        <div className="hidden items-center gap-8 md:flex">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-[13px] font-medium text-foreground/80 transition-colors hover:text-foreground"
+              className="text-sm font-medium text-foreground/80 transition-colors hover:text-foreground"
             >
               {link.label}
             </Link>
           ))}
 
-          <span aria-hidden className="h-5 w-px bg-border" />
+          <span aria-hidden className="h-6 w-px bg-border" />
 
           <Link
             href="/sign-in"
-            className="text-[13px] font-semibold text-indigo-400 transition-colors hover:text-indigo-300"
+            className="text-sm font-semibold text-violet-400 transition-colors hover:text-violet-300"
           >
             Sign In
           </Link>
 
           <Link
             href="/sign-up"
-            className="rounded-lg bg-indigo-500 px-4 py-2.5 text-[13px] font-semibold text-white shadow-sm shadow-indigo-500/25 transition-colors hover:bg-indigo-400"
+            className="rounded-xl bg-indigo-500 px-5 py-3 text-sm font-semibold text-white shadow-sm shadow-indigo-500/25 transition-colors hover:bg-indigo-400"
           >
             Get Started
           </Link>
