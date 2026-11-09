@@ -11,6 +11,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { creatJob } from "@/lib/actions/jobs";
 
 const jobTypes = ["Full-time", "Part-time", "Contract", "Internship"] as const;
 
@@ -32,7 +33,7 @@ const frequencies = [
   { value: "year", label: "per year" },
 ];
 
-type FormState = {
+export type FormState = {
   title: string;
   company: string;
   category: string;
@@ -224,7 +225,7 @@ export default function NewJobsPage() {
     return next;
   }
 
-  function submit(event: React.FormEvent<HTMLFormElement>) {
+  async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setPublished(false);
 
@@ -240,12 +241,8 @@ export default function NewJobsPage() {
       return;
     }
 
-    // No jobs API yet — the validated payload is logged for now.
-    console.log("Publish job payload:", {
-      ...form,
-      minSalary: form.minSalary ? Number(form.minSalary) : null,
-      maxSalary: form.maxSalary ? Number(form.maxSalary) : null,
-    });
+    const saveJob = await creatJob(form);
+    console.log(saveJob);
     setPublished(true);
   }
 
