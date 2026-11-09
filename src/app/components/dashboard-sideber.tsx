@@ -11,6 +11,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth-client";
+import Link from "next/link";
 
 const menuItemsByRole = {
   seeker: [
@@ -130,7 +131,7 @@ export default function DashboardSideber() {
           <SidebarMenu>
             {menuItemsByRole[role].map((item) => (
               <SidebarMenuItem key={item.id}>
-                <SidebarMenuButton render={<a href={item.url} />}>
+                <SidebarMenuButton render={<Link href={item.url} />}>
                   <item.icon />
                   <span>{item.name}</span>
                 </SidebarMenuButton>

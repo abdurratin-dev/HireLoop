@@ -12,17 +12,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 
-const links = [
-  { label: "Browse Jobs", href: "/jobs" },
-  { label: "Company", href: "/company" },
-  { label: "Pricing", href: "/pricing" },
-];
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const { data: session, error } = authClient.useSession();
   const user = session?.user;
+
+  const links = [
+  { label: "Browse Jobs", href: "/jobs" },
+  { label: "Company", href: "/company" },
+  { label: "Pricing", href: "/pricing" },
+  {label : "Dashboard" , href: `/dashboard/${user?.role || "seeker"}`}
+];
   // Auth pages are full-screen and render without the site navbar.
   if (pathname === "/sign-up" || pathname === "/sign-in") return null;
 
@@ -88,7 +90,9 @@ export function Navbar() {
                     </div>
                   </div>
                   <Button variant="outline">My Profile</Button>
-                  <Button variant="destructive">Sign Out</Button>
+                  <Button variant="destructive" onClick={()=> {
+                    authClient.signOut()
+                  }}>Sign Out</Button>
                 </PopoverContent>
               </Popover>
             </>
