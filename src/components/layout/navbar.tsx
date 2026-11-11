@@ -20,7 +20,7 @@ export function Navbar() {
   const user = session?.user;
 
   const links = [
-  { label: "Browse Jobs", href: "/jobs" },
+  { label: "Browse Jobs", href: "/browse-jobs" },
   { label: "Company", href: "/company" },
   { label: "Pricing", href: "/pricing" },
   {label : "Dashboard" , href: `/dashboard/${user?.role || "seeker"}`}

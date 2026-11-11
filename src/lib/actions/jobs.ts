@@ -1,4 +1,4 @@
-import { FormState } from "@/app/dashboard/recruiter/jobs/new/page";
+import type { FormState } from "@/lib/types/jobs";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000"
 

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { creatJob } from "@/lib/actions/jobs";
+import type { FormState } from "@/lib/types/jobs";
 
 const jobTypes = ["Full-time", "Part-time", "Contract", "Internship"] as const;
 
@@ -33,20 +34,10 @@ const frequencies = [
   { value: "year", label: "per year" },
 ];
 
-export type FormState = {
-  title: string;
-  company: string;
-  category: string;
-  jobType: string;
-  isRemote: boolean;
-  location: string;
-  deadline: string;
-  minSalary: string;
-  maxSalary: string;
-  frequency: string;
-  responsibilities: string;
-  qualifications: string;
-};
+// `FormState` lives in the shared types module so actions, pages and
+// components can use it without importing from a route file. Re-exported
+// here so any existing `import { FormState } from ".../new/page"` keeps working.
+export type { FormState };
 
 const initialForm: FormState = {
   title: "",
@@ -61,6 +52,8 @@ const initialForm: FormState = {
   frequency: "hour",
   responsibilities: "",
   qualifications: "",
+  applicants: 0,
+  postedAt: "",
 };
 
 type FormErrors = Partial<Record<keyof FormState, string>>;
@@ -177,6 +170,8 @@ export default function NewJobsPage() {
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
+    const date = new Date().toISOString().slice(0, 10);
+    setForm((current) => ({ ...current, postedAt: date }));
     setErrors((current) => {
       if (!current[key]) return current;
       const next = { ...current };
@@ -423,7 +418,7 @@ export default function NewJobsPage() {
             </span>
           </label>
 
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-3">
             <div className="space-y-1.5">
               <FieldLabel
                 htmlFor="location"
@@ -454,6 +449,21 @@ export default function NewJobsPage() {
               <FieldError message={errors.location} />
             </div>
 
+            <div className="space-y-1.5">
+              <FieldLabel htmlFor="applicants">Applicants</FieldLabel>
+              <input
+                id="applicants"
+                name="applicants"
+                type="number"
+                value={form.applicants}
+                onChange={(event) =>
+                  update("applicants", event.target.valueAsNumber)
+                }
+                aria-invalid={Boolean(errors.applicants) || undefined}
+                className={fieldClass}
+              />
+              <FieldError message={errors.applicants} />
+            </div>
             <div className="space-y-1.5">
               <FieldLabel htmlFor="deadline">
                 Application Deadline (deadline)

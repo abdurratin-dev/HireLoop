@@ -8,7 +8,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Trash2 } from "lucide-react";
-import { JobPosting } from "../dashboard/recruiter/jobs/page";
+import type { JobPosting } from "@/lib/types/jobs";
 import { toast } from "@/components/ui/toast";
 import { deleteJob } from "@/lib/actions/api/jobs";
 import { useState } from "react";
