@@ -2,7 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import {
   ArrowRight,
@@ -107,14 +107,13 @@ function PasswordToggle({
 }
 
 export function SignInForm() {
-  const router = useRouter();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const redirectTo = useSearchParams().get("redirectTo") ?? '/'
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -128,14 +127,13 @@ export function SignInForm() {
       email: email.trim(),
       password,
       rememberMe: remember,
+      callbackURL: redirectTo,
     });
     setLoading(false);
-
     if (signInError) {
       setError(signInError.message ?? "Invalid email or password.");
       return;
     }
-    router.push("/");
   }
 
   async function social(provider: "google" | "github" | "linkedin") {

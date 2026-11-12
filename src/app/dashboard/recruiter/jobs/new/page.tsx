@@ -14,7 +14,9 @@ import { cn } from "@/lib/utils";
 import { creatJob } from "@/lib/actions/jobs";
 import type { FormState } from "@/lib/types/jobs";
 
-const jobTypes = ["Full-time", "Part-time", "Contract", "Internship"] as const;
+export type Jobtype = ["Full-time", "Part-time", "Contract", "Internship"];
+
+const jobTypes = ["Full-time", "Part-time", "Contract", "Internship"] as Jobtype;
 
 const categories = [
   "Engineering & Tech",

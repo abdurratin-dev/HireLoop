@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import {
   Banknote,
   BarChart3,
@@ -43,9 +42,13 @@ import {
   getJobStatus,
 } from "@/components/jobs/format";
 import { JobIconTile } from "@/components/jobs/job-fields";
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { getJob } from "@/lib/actions/api/jobs";
 import { useEffect, useState } from "react";
+import { authClient } from "@/lib/auth-client";
+import { createApplication } from "@/lib/actions/api/applications";
+import { ApplicationFormData } from "@/lib/types/aplications";
+import { Jobtype } from "@/app/dashboard/recruiter/jobs/new/page";
 
 /* ── Defaults for fields the data model doesn't have yet ────── */
 
@@ -62,6 +65,24 @@ const benefits = [
 ];
 
 type SkillChip = { label: string; icon: LucideIcon };
+
+const initialForm: JobPosting = {
+  _id: "",
+  title: "",
+  company: "",
+  category: "",
+  jobType: "Full-time",
+  isRemote: false,
+  location: "",
+  deadline: "",
+  minSalary: "",
+  maxSalary: "",
+  frequency: "hour",
+  responsibilities: "",
+  qualifications: "",
+  applicants: 0,
+  postedAt: "",
+};
 
 /** Skill tags for the Requirements block, derived from the category. */
 const categorySkills: Record<string, SkillChip[]> = {
@@ -216,18 +237,18 @@ function BulletList({
 
 /* ── Component ─────────────────────────────────────────────── */
 export default function JobDetails({ id }: { id: string }) {
-  const [job, setJob] = useState<JobPosting>({});
+  const router = useRouter();
+  const [job, setJob] = useState<JobPosting>(initialForm);
   useEffect(() => {
-    const getdata = async() => {
+    const getdata = async () => {
       const jobs: JobPosting = await getJob(id);
-      console.log(jobs);
       if (!jobs?._id) notFound();
-      setJob(jobs)
+      setJob(jobs);
     };
-    console.log(getdata());
-    getdata()
+    getdata();
   }, [id]);
-  console.log(id);
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
   const responsibilities = toBullets(job?.responsibilities);
   const qualifications = toBullets(job?.qualifications);
   const skills = categorySkills[job?.category] ?? fallbackSkills;
@@ -236,6 +257,39 @@ export default function JobDetails({ id }: { id: string }) {
 
   const sectionHeading = "text-base font-semibold text-white";
   const sectionClass = "mt-6 border-t border-white/[0.06] pt-6";
+
+  const hendleApllyButton = async () => {
+    console.log('not user');
+    if (!user) {
+      router.push(`/sign-in?redirectTo=/browse-jobs/${id}`);
+      return;
+    } else if (user.role === "seeker") {
+      console.log('user');
+      const application: ApplicationFormData = {
+        jobId: job._id,
+        userId: user.id,
+        email: user.email,
+        jobTitle: job.title,
+        companyName: job.company,
+        jobType: job.jobType,
+        isRemote: job.isRemote,
+        location: job.location,
+        minSalary: job.minSalary,
+        maxSalary: job.maxSalary,
+        deadline: job.deadline,
+        appliedAt: new Date().toISOString(),
+        status: "applied",
+        archived: false,
+      };
+
+      const result = await createApplication(application);
+      if (result.insertedId) {
+        console.log("Application submitted successfully");
+        router.push("/browse-jobs");
+      }
+      return;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#0a0a0b] px-4 py-6 text-white sm:px-6">
@@ -275,12 +329,12 @@ export default function JobDetails({ id }: { id: string }) {
               </span>
             ) : (
               // TODO: point at the real application flow once it exists.
-              <Link
-                href="/sign-in"
+              <button
+                onClick={hendleApllyButton}
                 className="inline-flex h-10 items-center justify-center rounded-lg bg-white px-5 text-sm font-medium text-black transition-colors hover:bg-zinc-200"
               >
                 Apply Now
-              </Link>
+              </button>
             )}
           </div>
         </header>

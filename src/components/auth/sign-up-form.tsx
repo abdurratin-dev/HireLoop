@@ -26,7 +26,7 @@ import googleLogo from "@/assets/logos/google.png";
 
 const roles = [
   {
-    id: "job-seeker",
+    id: "seeker",
     label: "Job Seeker",
     description: "Find your perfect job",
     icon: Briefcase,
@@ -45,7 +45,7 @@ const roles = [
   },
 ] as const;
 
-type Role = "job-seeker" | "recruiter" | "admin" ;
+type Role = "seeker" | "recruiter" | "admin" ;
 
 const features: { icon: LucideIcon; label: string }[] = [
   { icon: Zap, label: "Fast & Easy Application" },
@@ -171,7 +171,7 @@ function CPasswordToggle({
 export function SignUpForm() {
   const router = useRouter();
 
-  const [role, setRole] = useState<Role>("job-seeker");
+  const [role, setRole] = useState<Role>("seeker");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
