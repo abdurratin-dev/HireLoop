@@ -5,6 +5,12 @@ export const getJobs = async(quary : string)=>{
     return res.json()
 }
 
+export const getJob = async(id:string)=>{
+    const res = await fetch(`${BASE_URL}/jobs/${id}`);
+    if (!res.ok) return null;
+    return res.json()
+}
+
 export const deleteJob = async(id:string)=>{
     const res = await fetch(`${BASE_URL}/jobs/${id}`,{
         method: 'DELETE'
