@@ -46,9 +46,11 @@ import { notFound, useRouter } from "next/navigation";
 import { getJob } from "@/lib/actions/api/jobs";
 import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
-import { createApplication } from "@/lib/actions/api/applications";
-import { ApplicationFormData } from "@/lib/types/aplications";
-import { Jobtype } from "@/app/dashboard/recruiter/jobs/new/page";
+import {
+  createApplication,
+  getApplicationsCount,
+} from "@/lib/actions/api/applications";
+import type { ApplicationFormData } from "@/lib/types/applications";
 
 /* ── Defaults for fields the data model doesn't have yet ────── */
 
@@ -259,35 +261,48 @@ export default function JobDetails({ id }: { id: string }) {
   const sectionClass = "mt-6 border-t border-white/[0.06] pt-6";
 
   const hendleApllyButton = async () => {
-    console.log('not user');
+    console.log("not user");
     if (!user) {
       router.push(`/sign-in?redirectTo=/browse-jobs/${id}`);
       return;
     } else if (user.role === "seeker") {
-      console.log('user');
+      console.log("user");
+      // Snapshot of the job at apply time — every field the My
+      // Applications page renders lives on the application document.
       const application: ApplicationFormData = {
         jobId: job._id,
         userId: user.id,
         email: user.email,
         jobTitle: job.title,
         companyName: job.company,
+        category: job.category,
         jobType: job.jobType,
+        arrangement: job.isRemote ? "Remote" : "On-site",
         isRemote: job.isRemote,
         location: job.location,
         minSalary: job.minSalary,
         maxSalary: job.maxSalary,
+        frequency: job.frequency,
         deadline: job.deadline,
         appliedAt: new Date().toISOString(),
         status: "applied",
         archived: false,
       };
 
-      const result = await createApplication(application);
-      if (result.insertedId) {
-        console.log("Application submitted successfully");
-        router.push("/browse-jobs");
+      const applicantCount = await getApplicationsCount(
+        `userId=${application.userId}`,
+      );
+      if (applicantCount.count > 10) {
+        router.push("/payment");
+        return;
+      } else {
+        const result = await createApplication(application);
+        if (result.insertedId) {
+          console.log("Application submitted successfully");
+          router.push("/dashboard/seeker/applications");
+        }
+        return;
       }
-      return;
     }
   };
 
@@ -328,7 +343,6 @@ export default function JobDetails({ id }: { id: string }) {
                 Applications Closed
               </span>
             ) : (
-              // TODO: point at the real application flow once it exists.
               <button
                 onClick={hendleApllyButton}
                 className="inline-flex h-10 items-center justify-center rounded-lg bg-white px-5 text-sm font-medium text-black transition-colors hover:bg-zinc-200"

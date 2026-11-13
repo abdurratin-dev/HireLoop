@@ -1,6 +1,6 @@
 const BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000"
 
-export const getJobs = async(quary : string)=>{
+export const getJobs = async(quary = "")=>{
     const res = await fetch(`${BASE_URL}/jobs?${quary}`);
     return res.json()
 }

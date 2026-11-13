@@ -9,6 +9,16 @@ const frequencyLabels: Record<string, string> = {
   year: "yr",
 };
 
+/**
+ * The minimal slices each formatter needs. Anything shaped like a posting —
+ * a `JobPosting` or an application's job snapshot — can be formatted with it.
+ */
+export type CompensationSource = Pick<
+  JobPosting,
+  "minSalary" | "maxSalary" | "frequency"
+>;
+export type LocationSource = Pick<JobPosting, "location" | "isRemote">;
+
 function formatAmount(value: string) {
   const amount = Number(value);
   if (!value?.trim() || Number.isNaN(amount)) return null;
@@ -20,7 +30,7 @@ function formatAmount(value: string) {
 }
 
 /** €25 – €40 / hr · €90k – €115k / yr · Not specified */
-export function formatCompensation(job: JobPosting) {
+export function formatCompensation(job: CompensationSource) {
   const min = formatAmount(job?.minSalary);
   const max = formatAmount(job?.maxSalary);
   const unit = frequencyLabels[job?.frequency] ?? "/ per " + job?.frequency;
@@ -30,7 +40,7 @@ export function formatCompensation(job: JobPosting) {
 }
 
 /** Remote (New York, USA) · London, UK · Location TBC */
-export function formatLocation(job: JobPosting) {
+export function formatLocation(job: LocationSource) {
   if (!job?.location?.trim()) return job?.isRemote ? "Remote" : "Location TBC";
   return job?.isRemote ? `Remote (${job?.location})` : job?.location;
 }
