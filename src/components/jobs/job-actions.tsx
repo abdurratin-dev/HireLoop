@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Pencil } from "lucide-react";
+import { Pencil, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { JobPosting } from "@/lib/types/jobs";
 import { DeleteJobButton } from "@/app/components/deleteJobDialog";
@@ -14,6 +14,13 @@ export function JobActions({
 }) {
   return (
     <div className={cn("flex items-center gap-1.5", className)}>
+      <Link
+        href={`/dashboard/recruiter/jobs/${job._id}/applications`}
+        className="inline-flex h-8 items-center gap-1.5 rounded-md border border-white/10 bg-white/[0.04] px-2.5 text-xs font-medium text-zinc-200 transition-colors hover:bg-white/[0.08] hover:text-white"
+      >
+        <Users aria-hidden className="size-3.5" />
+        Applicants
+      </Link>
       <Link
         href={`/dashboard/recruiter/jobs/new?edit=${job._id}`}
         className="inline-flex h-8 items-center gap-1.5 rounded-md border border-violet-500/40 bg-violet-500/10 px-2.5 text-xs font-medium text-violet-300 transition-colors hover:bg-violet-500/20"

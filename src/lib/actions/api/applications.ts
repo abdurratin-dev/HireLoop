@@ -1,7 +1,7 @@
 // Data-access module for the applications API (Express on :5000).
 // Follows the `lib/actions/api/jobs.ts` pattern.
 
-import type { ApplicationFormData, ApplicationRow } from "@/lib/types/applications"
+import type { ApplicationFormData, ApplicationRow, ApplicationStatus } from "@/lib/types/applications"
 
 const BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000"
 
@@ -12,6 +12,9 @@ export const getApplications = async (query = ""): Promise<ApplicationRow[]> => 
     const res = await fetch(`${BASE_URL}/applications?${query}`)
     return res.json()
 }
+
+// GET /applications?jobId=… — every applicant for one job posting.
+// Powers the recruiter "review applicants" table.
 
 export const getApplicationsCount = async (query = ""): Promise<{ count: number }> => {
     const res = await fetch(`${BASE_URL}/applications/count?${query}`)
@@ -27,6 +30,17 @@ export const createApplication = async (data: ApplicationFormData) => {
             "content-type": "application/json",
         },
         body: JSON.stringify(data),
+    })
+    return res.json()
+}
+
+export const updateAplication = async(id: string,data:ApplicationStatus)=>{
+    const res = await fetch(`${BASE_URL}/applications/${id}`, {
+        method: "PATCH",
+        headers: {
+            "content-type": "application/json",
+        },
+        body: JSON.stringify({status : data}),
     })
     return res.json()
 }

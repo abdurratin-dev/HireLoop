@@ -1,6 +1,8 @@
 import type { JobPosting, JobStatus } from "@/lib/types/jobs";
 
 const DAY_MS = 86_400_000;
+const MINUTE_MS = 60_000;
+const HOUR_MS = 60 * MINUTE_MS;
 
 const frequencyLabels: Record<string, string> = {
   hour: "hr",
@@ -73,4 +75,19 @@ export function formatPosted(iso: string) {
   if (days < 7) return `Posted ${days}d ago`;
   if (days < 30) return `Posted ${Math.floor(days / 7)}w ago`;
   return `Posted ${Math.floor(days / 30)}mo ago`;
+}
+
+/** "Just now" · "2 hours ago" · "4 days ago" · "1 week ago" · "2 months ago" */
+export function formatRelativeTime(iso: string) {
+  const elapsed = Math.max(0, Date.now() - new Date(iso).getTime());
+  const ago = (value: number, unit: string) =>
+    `${value} ${unit}${value === 1 ? "" : "s"} ago`;
+  if (elapsed < MINUTE_MS) return "Just now";
+  if (elapsed < HOUR_MS) return ago(Math.floor(elapsed / MINUTE_MS), "minute");
+  if (elapsed < DAY_MS) return ago(Math.floor(elapsed / HOUR_MS), "hour");
+  if (elapsed < 7 * DAY_MS)
+    return ago(Math.floor(elapsed / DAY_MS), "day");
+  if (elapsed < 30 * DAY_MS)
+    return ago(Math.floor(elapsed / (7 * DAY_MS)), "week");
+  return ago(Math.floor(elapsed / (30 * DAY_MS)), "month");
 }

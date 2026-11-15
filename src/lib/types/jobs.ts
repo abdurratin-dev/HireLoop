@@ -21,6 +21,7 @@ export type FormState = {
   qualifications: string;
   applicants: number;
   postedAt: string;
+  recruiterId : string
 };
 
 /** Lifecycle of a listing, derived from its application deadline. */

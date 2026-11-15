@@ -8,6 +8,7 @@ import { getJobs } from "@/lib/actions/api/jobs";
 import type { JobPosting } from "@/lib/types/jobs";
 import { JobTable } from "@/components/jobs/job-table";
 import { JobCardList } from "@/components/jobs/job-card";
+import { authClient } from "@/lib/auth-client";
 
 // `JobPosting` lives in the shared types module; re-exported here so any
 // existing `import { JobPosting } from ".../jobs/page"` keeps working.
@@ -15,14 +16,15 @@ export type { JobPosting };
 
 export default function JobPage() {
   const [jobs, setJobs] = useState<JobPosting[]>([]);
-
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
   useEffect(() => {
     const data = async () => {
-      const job = await getJobs();
+      const job = await getJobs(`recruiterId=${user?.id}`);
       setJobs(job);
     };
     data();
-  }, []);
+  }, [user]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 pb-24 pt-6 sm:px-6">

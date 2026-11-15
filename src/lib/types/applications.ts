@@ -58,6 +58,7 @@ export type ApplicationFormData = {
     status: ApplicationStatus
     /** Soft delete behind the Active/Archived toggle. */
     archived: boolean
+    recruiterId : string
 }
 
 /** Saved document: the payload plus MongoDB's id. */

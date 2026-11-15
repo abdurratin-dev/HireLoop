@@ -64,6 +64,7 @@ const initialForm: FormState = {
   qualifications: "",
   applicants: 0,
   postedAt: "",
+  recruiterId : ""
 };
 
 type FormErrors = Partial<Record<keyof FormState, string>>;
@@ -184,7 +185,7 @@ export default function NewJobsPage() {
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
     const date = new Date().toISOString().slice(0, 10);
-    setForm((current) => ({ ...current, postedAt: date }));
+    setForm((current) => ({ ...current, postedAt: date ,recruiterId: user?.id || ""}));
     setErrors((current) => {
       if (!current[key]) return current;
       const next = { ...current };

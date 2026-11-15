@@ -85,6 +85,7 @@ const initialForm: JobPosting = {
   qualifications: "",
   applicants: 0,
   postedAt: "",
+  recruiterId: "",
 };
 
 /** Skill tags for the Requirements block, derived from the category. */
@@ -288,6 +289,7 @@ export default function JobDetails({ id }: { id: string }) {
         appliedAt: new Date().toISOString(),
         status: "applied",
         archived: false,
+        recruiterId : job.recruiterId
       };
 
       const applicantCount = await getApplicationsCount(

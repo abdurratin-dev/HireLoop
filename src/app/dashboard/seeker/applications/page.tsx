@@ -16,34 +16,16 @@ import {
   formatDate,
   formatCompensation,
   formatLocation,
+  formatRelativeTime,
 } from "@/components/jobs/format";
+import { StatusPill } from "@/components/applications/status-pill";
 import type { JobPosting } from "@/lib/types/jobs";
-import {
-  STATUS_META,
-  type ApplicationRow,
-  type ApplicationStatus,
-} from "@/lib/types/applications";
+import type { ApplicationRow, ApplicationStatus } from "@/lib/types/applications";
 import { cn } from "@/lib/utils";
 
 /* ── Formatting ──────────────────────────────────────────── */
 
-const MINUTE_MS = 60_000;
-const HOUR_MS = 60 * MINUTE_MS;
-const DAY_MS = 24 * HOUR_MS;
-
-/** "Just now" · "2 hours ago" · "4 days ago" · "1 week ago" · "2 months ago" */
-function formatRelativeTime(iso: string) {
-  const elapsed = Math.max(0, Date.now() - new Date(iso).getTime());
-  const ago = (value: number, unit: string) =>
-    `${value} ${unit}${value === 1 ? "" : "s"} ago`;
-  if (elapsed < MINUTE_MS) return "Just now";
-  if (elapsed < HOUR_MS) return ago(Math.floor(elapsed / MINUTE_MS), "minute");
-  if (elapsed < DAY_MS) return ago(Math.floor(elapsed / HOUR_MS), "hour");
-  if (elapsed < 7 * DAY_MS) return ago(Math.floor(elapsed / DAY_MS), "day");
-  if (elapsed < 30 * DAY_MS)
-    return ago(Math.floor(elapsed / (7 * DAY_MS)), "week");
-  return ago(Math.floor(elapsed / (30 * DAY_MS)), "month");
-}
+const HOUR_MS = 60 * 60_000;
 
 /** "Full-time • Remote" — the line under the job title. */
 function arrangementOf(app: ApplicationRow) {
@@ -67,18 +49,6 @@ function jobSnapshot(app: ApplicationRow) {
 }
 
 /* ── Presentational pieces ───────────────────────────────── */
-
-function StatusPill({ status }: { status: ApplicationStatus }) {
-  const meta = STATUS_META[status] ?? STATUS_META.applied;
-  return (
-    <span
-      className="inline-flex whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium"
-      style={{ color: meta.color, backgroundColor: `${meta.color}1F` }}
-    >
-      {meta.label}
-    </span>
-  );
-}
 
 function StatCard({
   label,
@@ -251,6 +221,7 @@ function seedApplication(seed: Seed, index: number): ApplicationRow {
     jobId: `seed-job-${index + 1}`,
     userId: "seed-user-id",
     email: "you@hireloop.dev",
+    recruiterId: "seed-recruiter-id",
     jobTitle: seed.jobTitle,
     companyName: seed.companyName,
     category: seed.category,
