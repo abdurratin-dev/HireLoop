@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Download, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +19,8 @@ import {
   formatRelativeTime,
 } from "@/components/jobs/format";
 import { StatusPill } from "@/components/applications/status-pill";
+import { Detail } from "@/components/ui/detail";
+import { StatCard } from "@/components/ui/stat-card";
 import type { JobPosting } from "@/lib/types/jobs";
 import type { ApplicationRow, ApplicationStatus } from "@/lib/types/applications";
 import { cn } from "@/lib/utils";
@@ -49,30 +51,6 @@ function jobSnapshot(app: ApplicationRow) {
 }
 
 /* ── Presentational pieces ───────────────────────────────── */
-
-function StatCard({
-  label,
-  value,
-  valueClassName,
-}: {
-  label: string;
-  value: ReactNode;
-  valueClassName?: string;
-}) {
-  return (
-    <div className="rounded-xl border border-white/[0.08] bg-[#141416] p-4 sm:p-5">
-      <p className="text-sm text-zinc-500">{label}</p>
-      <p
-        className={cn(
-          "mt-2 text-3xl font-bold tracking-tight text-white",
-          valueClassName,
-        )}
-      >
-        {value}
-      </p>
-    </div>
-  );
-}
 
 const headerCell = "px-4 py-3 text-left text-xs font-medium text-zinc-500";
 
@@ -166,25 +144,6 @@ function ApplicationCard({
       >
         Details
       </button>
-    </div>
-  );
-}
-
-function Detail({
-  label,
-  className,
-  children,
-}: {
-  label: string;
-  className?: string;
-  children: ReactNode;
-}) {
-  return (
-    <div className={cn("min-w-0", className)}>
-      <dt className="text-[11px] font-medium tracking-wider text-zinc-500 uppercase">
-        {label}
-      </dt>
-      <dd className="mt-1 truncate text-sm text-zinc-200">{children}</dd>
     </div>
   );
 }

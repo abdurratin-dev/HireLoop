@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import {
   formatDate,
   formatLocation,
@@ -8,6 +8,7 @@ import {
 } from "@/components/jobs/format";
 import { StatusPill } from "./status-pill";
 import { StatusSelect } from "./status-select";
+import { Detail } from "@/components/ui/detail";
 import {
   Dialog,
   DialogContent,
@@ -148,25 +149,6 @@ function ApplicantCard({
 }
 
 /* ── Details dialog ───────────────────────────────────────── */
-
-function Detail({
-  label,
-  className,
-  children,
-}: {
-  label: string;
-  className?: string;
-  children: ReactNode;
-}) {
-  return (
-    <div className={cn("min-w-0", className)}>
-      <dt className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
-        {label}
-      </dt>
-      <dd className="mt-1 truncate text-sm text-zinc-200">{children}</dd>
-    </div>
-  );
-}
 
 function ApplicantDetailsDialog({
   app,
