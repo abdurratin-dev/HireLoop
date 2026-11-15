@@ -10,11 +10,6 @@ import {
 
 type CurrencyCode = "BDT" | "USD";
 
-const currencies: { code: CurrencyCode; flag: string; label: string }[] = [
-  { code: "BDT", flag: "🇧🇩", label: "BDT 2,553.33" },
-  { code: "USD", flag: "🇺🇸", label: "$20.00" },
-];
-
 const countries = [
   "Bangladesh",
   "United States",
@@ -86,14 +81,12 @@ export default function PaymentPage() {
   const [saveInfo, setSaveInfo] = useState(false);
   const [paying, setPaying] = useState(false);
 
-  const price = currency === "BDT" ? "BDT 2,553.33" : "$20.00";
+  const currencies: { code: CurrencyCode; flag: string; label: string }[] = [
+  { code: "BDT", flag: "🇧🇩", label: "BDT 2,553.33" },
+  { code: "USD", flag: "🇺🇸", label: "$20.00" },
+];
 
-  function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (paying) return;
-    setPaying(true);
-    window.setTimeout(() => setPaying(false), 1500);
-  }
+  const price = currency === "BDT" ? "BDT 2,553.33" : "$20.00";
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -166,7 +159,7 @@ export default function PaymentPage() {
 
         {/* Right: payment form */}
         <section className="mx-auto w-full max-w-md lg:mx-0">
-          <form onSubmit={submit}>
+          <form action="/api/checkout_sessions" method="POST" >
             {/* Link express checkout */}
             <button
               type="button"
@@ -321,7 +314,7 @@ export default function PaymentPage() {
 
             {/* Pay */}
             <button
-              type="submit"
+              type="submit" role="link"
               disabled={paying}
               className="mt-4 h-12 w-full rounded-lg bg-[#3b82f6] text-sm font-semibold text-white transition-colors hover:bg-[#2563eb] active:bg-[#1d4ed8] disabled:cursor-not-allowed disabled:opacity-70"
             >

@@ -51,6 +51,7 @@ import {
   getApplicationsCount,
 } from "@/lib/actions/api/applications";
 import type { ApplicationFormData } from "@/lib/types/applications";
+import { getUsers } from "@/lib/actions/api/user";
 
 /* ── Defaults for fields the data model doesn't have yet ────── */
 
@@ -292,8 +293,10 @@ export default function JobDetails({ id }: { id: string }) {
       const applicantCount = await getApplicationsCount(
         `userId=${application.userId}`,
       );
-      if (applicantCount.count > 10) {
-        router.push("/payment");
+      const getUser = await getUsers(user.id)
+      console.log(getUser);
+      if (!getUser.premium && applicantCount.count > 2) {
+        router.push("/chackout");
         return;
       } else {
         const result = await createApplication(application);

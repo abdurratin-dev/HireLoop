@@ -13,10 +13,18 @@ import {
 import { cn } from "@/lib/utils";
 import { creatJob } from "@/lib/actions/jobs";
 import type { FormState } from "@/lib/types/jobs";
+import { getUsers } from "@/lib/actions/api/user";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export type Jobtype = ["Full-time", "Part-time", "Contract", "Internship"];
 
-const jobTypes = ["Full-time", "Part-time", "Contract", "Internship"] as Jobtype;
+const jobTypes = [
+  "Full-time",
+  "Part-time",
+  "Contract",
+  "Internship",
+] as Jobtype;
 
 const categories = [
   "Engineering & Tech",
@@ -167,6 +175,9 @@ export default function NewJobsPage() {
   const [form, setForm] = useState<FormState>(initialForm);
   const [errors, setErrors] = useState<FormErrors>({});
   const [published, setPublished] = useState(false);
+  const router = useRouter();
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
 
   const today = new Date().toISOString().slice(0, 10);
 
@@ -237,10 +248,16 @@ export default function NewJobsPage() {
       firstInvalid?.focus({ preventScroll: true });
       return;
     }
-
-    const saveJob = await creatJob(form);
-    console.log(saveJob);
-    setPublished(true);
+    const getUser = await getUsers(user?.id || "");
+    if (!getUser.premium) {
+      router.push("/chackout");
+      return;
+    } else {
+      const saveJob = await creatJob(form);
+      console.log(saveJob);
+      setPublished(true);
+      return;
+    }
   }
 
   return (
